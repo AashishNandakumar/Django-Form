@@ -1,8 +1,8 @@
 from django.urls import path
-from .views import contactUs
+from .views import contact_us
 
 urlpatterns = [
     # path('admin/', admin.site.urls),
-    path('contactUs', contactUs),
+    path('contactUs', contact_us),
 
 ]
