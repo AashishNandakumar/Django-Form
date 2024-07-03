@@ -1,5 +1,5 @@
 from django import forms
-from django.forms import ValidationError
+from .models import Feedback, Project
 
 TOPIC_CHOICES = (
     ('general', 'General enquiry'),
@@ -22,3 +22,34 @@ class ContactForm(forms.Form):
 
         return message
 
+
+# feedback form
+class FeedbackForm(forms.ModelForm):
+    class Meta:
+        model = Feedback
+        fields = ['name', 'email', 'message']
+
+    def clean_message(self):
+        msg = self.cleaned_data.get('message')
+        no_of_words = len(msg.split())
+
+        if no_of_words < 4:
+            raise forms.ValidationError('too short message')
+
+        return msg
+    
+    def clean(self):
+        cleaned_data = super().clean()
+
+        return cleaned_data
+
+
+# Project form with widgets
+class ProjectForm(forms.ModelForm):
+    class Meta:
+        model = Project
+        fields = ['topic', 'languages', 'duration']
+        # widgets: these control the appearance and behaviour of form inputs
+        widgets = {
+            'languages': forms.TextInput(attrs={'placeholder': 'Comma-seperated list'})
+        }
